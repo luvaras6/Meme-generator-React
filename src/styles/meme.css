@@ -27,14 +27,24 @@
 }
 
 .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.input {
+    width: 15rem;
     border-radius: 5px;
     border: 2px solid orangered;
     color: black;
     padding: 0.7rem;
     background-color: rgb(249, 249, 249);
+    outline: none;
 }
 
-.form:focus {
+.input:focus {
     border: 2px solid rgb(10, 168, 52);
     outline: none;
 }
@@ -44,12 +54,18 @@
     text-align: center;
 }
 
+.contenedor-btn {
+    display: flex;
+    gap: 2rem;
+}
+
 .btn {
     background-color: rgb(255, 139, 67);
     border-radius: 10px;
     padding: 0.7rem;
     border: none;
     box-shadow: 1.1px 1.1px 5px rgb(150, 150, 150), -1.1px -1.1px 5px rgb(250, 250, 250);
+    cursor: pointer;
 }
 
 .btn:hover {
