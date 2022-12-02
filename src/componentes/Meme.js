@@ -20,9 +20,9 @@ const Meme = () => {
     const [meme, setMeme] = useState();
     const [topText, setTopText] = useState('');
     const [bottomText, setBottomText] = useState('');
-    const [letra, setLetra] = useState();
-    const [tamaño, setTamaño] = useState(5);
-    const [color, setColor] = useState();
+    const [letra, setLetra] = useState('');
+    const [tamaño, setTamaño] = useState(10);
+    const [color, setColor] = useState('');
     const [mem, setMem] = useState();
     const [mostrar, setMostrar] = useState(true);
 
@@ -36,17 +36,18 @@ const Meme = () => {
             })
     }, []);
 
+
     const cambioLetra = (e) => {
         setLetra(e.target.value)
-    }
+    };
 
     const cambioTamaño = (e) => {
         setTamaño(e.target.value)
-    }
+    };
 
     const cambioColor = (e) => {
         setColor(e.target.value)
-    }
+    };
 
     // Función utilizando html2canvas para descargar meme
     const descargar = () => {
@@ -58,7 +59,7 @@ const Meme = () => {
                 link.href = img;
                 link.click();
             });
-    }
+    };
 
     return (
         <div className='contenedor-principal'>
@@ -69,42 +70,29 @@ const Meme = () => {
                 <div className='editores'>
                     <h3 className='subtitulo'>Ingresa el texto del meme</h3>
 
-                    <form className='form' onSubmit={async (e) => {
+                    <form className='form' onSubmit={ (e) => {
                         e.preventDefault();
 
-                        const params = {
-                            template_id: meme.id,
-                            username: 'luvaras6',
-                            password: 'Imgapi123',
-                            text0: topText,
-                            text1: bottomText,
-                            font: letra,
-                            max_font_size: tamaño,
-                            boxes: [
-                                {
-                                    'text': topText,
-                                    'color': color,
-                                    'outline_color': '#000000'
-                                },
-                                {
-                                    'text': bottomText,
-                                    'color': color,
-                                    'outline_color': '#000000'
-                                }
-                            ]
-                        };
+                        const formData = new FormData();
 
-                        const ajustes = {
+                        formData.append('template_id', meme.id);
+                        formData.append('username', 'luvaras6');
+                        formData.append('password', 'Imgapi123');
+                        formData.append('font', letra);
+                        formData.append('max_font_size', tamaño);
+                        // formData.append('boxes[0][text]', topText);
+                        // formData.append('boxes[0][color]', color);
+                        // formData.append('boxes[1][text]', bottomText);
+                        // formData.append('boxes[1][color]', color);
+
+                        fetch('https://api.imgflip.com/caption_image', {
                             method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(params)
-                        };
-
-                        const response = await fetch(
-                            'https://api.imgflip.com/caption_image', ajustes);
-                        const datos = await response.json();
-                        setMem(datos.data.url)
+                            headers: {'Content-Type': 'multipart/form-data'},
+                            body: formData
+                        })
+                            .then(datos => console.log(datos.json()))
+                            .then(json => console.log(json))
+                            //setMem(json.data.url)
                     }}>
                         <input onChange={(e) => { setTopText(e.target.value) }} className='input' value={topText} type="text" placeholder="Primera frase" name="meme" arial-label="default input example"></input>
                         <input onChange={(e) => { setBottomText(e.target.value) }} className='input' value={bottomText} type="text" placeholder="Segunda frase" name="meme" arial-label="default input example"></input>
