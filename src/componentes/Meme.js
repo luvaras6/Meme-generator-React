@@ -36,19 +36,6 @@ const Meme = () => {
             })
     }, []);
 
-
-    const cambioLetra = (e) => {
-        setLetra(e.target.value)
-    };
-
-    const cambioTamaño = (e) => {
-        setTamaño(e.target.value)
-    };
-
-    const cambioColor = (e) => {
-        setColor(e.target.value)
-    };
-
     // Función utilizando html2canvas para descargar meme
     const descargar = () => {
         html2canvas(document.querySelector(".descarga"), { allowTaint: true, useCORS: true, width: 300 })
@@ -61,6 +48,30 @@ const Meme = () => {
             });
     };
 
+    const apiPost = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append('template_id', meme.id);
+        formData.append('username', 'luvaras6');
+        formData.append('password', 'Imgapi123');
+        formData.append('font', letra);
+        formData.append('max_font_size', tamaño);
+        formData.append('boxes[0][text]', topText);
+        formData.append('boxes[0][color]', color);
+        formData.append('boxes[1][text]', bottomText);
+        formData.append('boxes[1][color]', color);
+
+        const response = await fetch('https://api.imgflip.com/caption_image', {
+            method: 'POST',
+            body: formData
+        });
+        const datos = await response.json();
+        console.log(datos);
+        setMem(datos.data.url)
+    };
+
     return (
         <div className='contenedor-principal'>
             <h2 className='bienvenida'>Haz click en una imagen y comienza la diversión!</h2>
@@ -70,35 +81,13 @@ const Meme = () => {
                 <div className='editores'>
                     <h3 className='subtitulo'>Ingresa el texto del meme</h3>
 
-                    <form className='form' onSubmit={ (e) => {
-                        e.preventDefault();
-
-                        const formData = new FormData();
-
-                        formData.append('template_id', meme.id);
-                        formData.append('username', 'luvaras6');
-                        formData.append('password', 'Imgapi123');
-                        formData.append('font', letra);
-                        formData.append('max_font_size', tamaño);
-                        // formData.append('boxes[0][text]', topText);
-                        // formData.append('boxes[0][color]', color);
-                        // formData.append('boxes[1][text]', bottomText);
-                        // formData.append('boxes[1][color]', color);
-
-                        fetch('https://api.imgflip.com/caption_image', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'multipart/form-data'},
-                            body: formData
-                        })
-                            .then(datos => console.log(datos.json()))
-                            .then(json => console.log(json))
-                            //setMem(json.data.url)
-                    }}>
+                    <form className='form' onSubmit={apiPost}>
                         <input onChange={(e) => { setTopText(e.target.value) }} className='input' value={topText} type="text" placeholder="Primera frase" name="meme" arial-label="default input example"></input>
                         <input onChange={(e) => { setBottomText(e.target.value) }} className='input' value={bottomText} type="text" placeholder="Segunda frase" name="meme" arial-label="default input example"></input>
 
                         <div className='contenedor-btn'>
-                            <button onClick={() => setMostrar(!mostrar)} type="submit" className='btn'>Crear meme / Reestablecer</button>
+                            <button type="submit" className='btn'>Crear meme</button>
+                            <button onClick={() => setMostrar(!mostrar)} type="button" className='btn'>Mostrar meme</button>
                             <button onClick={descargar} type="button" className='btn'>Descargar meme</button>
                         </div>
 
@@ -118,7 +107,7 @@ const Meme = () => {
                 </div>
                 }
                 <div>
-                    <Select cambioLetra={cambioLetra} cambioColor={cambioColor} cambioTamaño={cambioTamaño} />
+                    <Select cambioLetra={(e) => {setLetra(e.target.value)}} cambioColor={(e) => {setColor(e.target.value)}} cambioTamaño={(e) => {setTamaño(e.target.value)}} />
                 </div>
 
             </section>
