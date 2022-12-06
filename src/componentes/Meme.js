@@ -48,6 +48,7 @@ const Meme = () => {
             });
     };
 
+    // Función llamada POST a API para crear meme
     const apiPost = async (e) => {
         e.preventDefault();
 
@@ -70,6 +71,7 @@ const Meme = () => {
         const datos = await response.json();
         console.log(datos);
         setMem(datos.data.url)
+        setMostrar(!mostrar)
     };
 
     return (
@@ -87,7 +89,6 @@ const Meme = () => {
 
                         <div className='contenedor-btn'>
                             <button type="submit" className='btn'>Crear meme</button>
-                            <button onClick={() => setMostrar(!mostrar)} type="button" className='btn'>Mostrar meme</button>
                             <button onClick={descargar} type="button" className='btn'>Descargar meme</button>
                         </div>
 
