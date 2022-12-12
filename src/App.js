@@ -1,5 +1,5 @@
 import './App.css';
-import Meme from './componentes/Meme';
+import Meme from './Components/Meme';
 
 function App() {
   return (
